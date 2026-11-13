@@ -21,14 +21,14 @@ status = {'Богатый': [75, 100],
 }
 coff = {'Богатый': 1.6, 'Состоятельный': 1.3, 'Обычный': 1.15}
 clients = []
-inventory = {}
+inventory = {'Хлеб': 5, 'Молоко': 3, 'Яйца': 2, 'Мясо': 1}
 shop_items = {
     1: 'Хлеб',
     2: 'Молоко',
     3: 'Яйца',
     4: 'Мясо'
 }
-prices = {}
+prices = {'Хлеб': 40, 'Молоко': 80, 'Яйца': 100, 'Мясо': 150}
 base_price = {
             'Хлеб': {'Закупка': 20, 'Цена': 40},
             'Молоко': {'Закупка': 40, 'Цена': 80},
@@ -55,12 +55,12 @@ def employyer(inventory, clients):
                 if min_item <= randomizer_age <= max_item:
                     age_res = key
             product = choice(list(inventory.keys()))
-            clients.append({stat_res: [age_res, product]})
-            if base_price[product]['Цена'] * 1.15 >= prices[product]:
-                print('Я могу купить это.')
+            clients.append({stat_res: age_res})
+            print(f'Клиент {clients[i]} хочет купить {product}.')
+            if base_price[product]['Цена'] * coff[stat_res] >= prices[product]:
+                print(stat_res, age_res,': Я могу купить это.')
             else:
                 print('Я не куплю это, слишком дорого!')
-            print(f'Клиент {clients[i]} хочет купить {product}')
         
 
 def buying_items(shop_items, base_price, cash, inventory, prices, buy):
@@ -80,9 +80,7 @@ def buying_items(shop_items, base_price, cash, inventory, prices, buy):
         else:
             print('У вас недостаточно денег, Вам нужно заработать их! Вам нехватает: ',
                 base_price[item]['Закупка'] - cash)
-    return cash
-    
-    
+    return cash    
 
 def change_prices(inventory, prices):
     print('Ваш инвентарь: ', inventory)
