@@ -19,16 +19,18 @@ status = {'Богатый': [75, 100],
           'Состоятельный': [30, 74],
           'Обычный': [0, 29]
 }
+#, 'Молоко': 3, 'Яйца': 2, 'Мясо': 1
+#, 'Молоко': 80, 'Яйца': 100, 'Мясо': 150
 coff = {'Богатый': 1.6, 'Состоятельный': 1.3, 'Обычный': 1.15}
 clients = []
-inventory = {'Хлеб': 5, 'Молоко': 3, 'Яйца': 2, 'Мясо': 1}
+inventory = {'Хлеб': 1}
 shop_items = {
     1: 'Хлеб',
     2: 'Молоко',
     3: 'Яйца',
     4: 'Мясо'
 }
-prices = {'Хлеб': 40, 'Молоко': 80, 'Яйца': 100, 'Мясо': 150}
+prices = {'Хлеб': 40}
 base_price = {
             'Хлеб': {'Закупка': 20, 'Цена': 40},
             'Молоко': {'Закупка': 40, 'Цена': 80},
@@ -39,13 +41,17 @@ base_price = {
 cash = 150
 level = 1
 
-def employyer(inventory, clients):
+def employyer(inventory, clients, cash):
     clients.clear()
     if len(inventory) == 0:
         print('Ваш инвентарь пуст. Сходите на склад и купите что-нибудь!')
     else:
-        count = randint(1, 3)
+        count = randint(1, 4)
+        print(f'Сейчас клиентов: {count}')
         for i in range(count):
+            if len(inventory) == 0:
+                print(f'Ваш инвентарь пуст. Всё выкупили-и-и-и...! Потеряно клиентов: {count - i}')
+                break
             randomizer_stat = randint(0, 100)
             randomizer_age = randint(0, 100)
             for key, (min_item, max_item) in status.items():
@@ -56,11 +62,18 @@ def employyer(inventory, clients):
                     age_res = key
             product = choice(list(inventory.keys()))
             clients.append({stat_res: age_res})
-            print(f'Клиент {clients[i]} хочет купить {product}.')
+            print(f'Клиент {stat_res.lower()} {age_res} хочет купить {product.lower()}.')
             if base_price[product]['Цена'] * coff[stat_res] >= prices[product]:
-                print(stat_res, age_res,': Я могу купить это.')
+                print(stat_res, age_res,': Я могу купить это. Покупаю.')
+
+                inventory[product] -= 1
+                cash += prices[product]
+                print(f'Вы успешно продали {product.lower()}, ваши деньги: {cash}.')
+                if inventory[product] == 0:
+                    del inventory[product]
+                    print(f'У вас закончился {product.lower()}, сходите и купите ещё!')
             else:
-                print('Я не куплю это, слишком дорого!')
+                print(stat_res, age_res,': Я не куплю это, слишком дорого! Я бы купил за цену чуть поменьше...')
         
 
 def buying_items(shop_items, base_price, cash, inventory, prices, buy):
@@ -102,7 +115,7 @@ while main != 3:
             if shop == 1:
                 change_prices(inventory, prices)
             elif shop == 3:
-                employyer(inventory, clients)
+                employyer(inventory, clients, cash)
             shop = int(input('Вы в своем магазине. 1. Поменять цены. 2. Открыть магазин. 3. Обслужить клиентов. 4. Выйти из магазина. '))
     
     elif main == 2:
