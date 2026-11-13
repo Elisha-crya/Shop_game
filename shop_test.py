@@ -6,7 +6,7 @@ import time
 # from rich.progress import track
 from rich.panel import Panel
 import rich
-from random import randint
+from random import *
 
 # for i in track(range(13), description = 'Загрузка...'):
     # time.sleep(0.27)
@@ -15,7 +15,11 @@ def clear():
     print("\033[2J\033[3J\033[H", end="", flush=True)
 
 ages = {'пожилой': [75, 100], 'взрослый': [30, 74], 'ребенок': [0, 29]}
-status = {'Богатый': [75, 100], 'Состоятельный': [30, 74], 'Обычный': [0, 29]}
+status = {'Богатый': [75, 100],
+          'Состоятельный': [30, 74],
+          'Обычный': [0, 29]
+}
+coff = {'Богатый': 1.6, 'Состоятельный': 1.3, 'Обычный': 1.15}
 clients = []
 inventory = {}
 shop_items = {
@@ -40,18 +44,24 @@ def employyer(inventory, clients):
     if len(inventory) == 0:
         print('Ваш инвентарь пуст. Сходите на склад и купите что-нибудь!')
     else:
-        count = randint(1, 6)
+        count = randint(1, 3)
         for i in range(count):
             randomizer_stat = randint(0, 100)
             randomizer_age = randint(0, 100)
             for key, (min_item, max_item) in status.items():
                 if min_item <= randomizer_stat <= max_item:
-                    result = key
+                    stat_res = key
             for key, (min_item, max_item) in ages.items():
                 if min_item <= randomizer_age <= max_item:
-                    result2 = key
-            clients.append({result: result2})
-        print(f'Сейчас {count} покупателей -, {clients}')
+                    age_res = key
+            product = choice(list(inventory.keys()))
+            clients.append({stat_res: [age_res, product]})
+            if base_price[product]['Цена'] * 1.15 >= prices[product]:
+                print('Я могу купить это.')
+            else:
+                print('Я не куплю это, слишком дорого!')
+            print(f'Клиент {clients[i]} хочет купить {product}')
+        
 
 def buying_items(shop_items, base_price, cash, inventory, prices, buy):
     if buy in shop_items:
