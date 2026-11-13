@@ -10,7 +10,7 @@ from random import randint
 
 # for i in track(range(13), description = 'Загрузка...'):
     # time.sleep(0.27)
-
+# test
 def clear():
     print("\033[2J\033[3J\033[H", end="", flush=True)
 
