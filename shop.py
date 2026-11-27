@@ -44,12 +44,20 @@ base_price = {
             'Яйца': {'Закупка': 50, 'Цена': 100},
             'Мясо': {'Закупка': 75, 'Цена': 150}
             }
+levels_exp = {1: 30, 2: 60, 3: 100, 4: 150, 5: 220}
 player = {'cash': 150,
           'level': 1,
           'inventory': {},
-          'EXP': 0
+          'exp': 0
 }
 
+def exp_add(player):
+    player['exp'] += 10
+    need_exp = levels_exp[player['level']]
+    if player['exp'] >= need_exp:
+        player['exp'] -= need_exp
+        player['level'] += 1
+        print(f'Поздравляю! Ты повысил уровень. Твой уровень: {player['level']}')
 
 def employyer(clients, player):
     clients.clear()
@@ -79,6 +87,7 @@ def employyer(clients, player):
                 player['inventory'][product] -= 1
                 player['cash'] += prices[product]
                 print(f'Вы успешно продали {product.lower()}, ваши деньги: {player['cash']}.')
+                exp_add(player)
                 if player['inventory'][product] == 0:
                     del player['inventory'][product]
                     print(f'У вас закончился {product.lower()}, сходите и купите ещё!')
