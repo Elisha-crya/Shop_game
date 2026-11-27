@@ -7,12 +7,22 @@ import time
 from rich.panel import Panel
 import rich
 from random import *
+import json
+import os
 
 # for i in track(range(13), description = 'Загрузка...'):
     # time.sleep(0.27)
 
 def clear():
     print("\033[2J\033[3J\033[H", end="", flush=True)
+
+def save_game(player):
+    with open('game_save_DONOTTOUCH!!!.json', 'w', encoding = 'utf-8') as file:
+        json.dump(player, file, ensure_ascii = False, indent = 4)
+def load_game():
+    with open('game_save_DONOTTOUCH!!!.json', 'r', encoding = 'utf-8') as file:
+        player = json.load(file)
+    return player
 
 ages = {'пожилой': [75, 100], 'взрослый': [30, 74], 'ребенок': [0, 29]}
 status = {'Богатый': [75, 100],
@@ -105,6 +115,9 @@ def change_prices(prices, player):
             prices[tovar] = change
     clear()
 
+if os.path.exists('game_save_DONOTTOUCH!!!.json'):
+    player = load_game()
+
 main = int(input('Добро пожаловать в ваш магазин! \n 1. Зайдем в магазин. \n 2. Зайдем на склад за продуктами. \n 3. Сохранимся и выйдем. \n (Выберите цифру от одного до трех.) '))
 
 while main != 3:
@@ -126,4 +139,5 @@ while main != 3:
     clear()
     main = int(input('Добро пожаловать в ваш магазин! \n 1. Зайдем в магазин. \n 2. Зайдем на склад за продуктами. \n 3. Сохранимся и выйдем. \n (Выберите цифру от одного до трех.) '))
 
+save_game(player)
 print('До свидания! (Игра сохранена.)')
